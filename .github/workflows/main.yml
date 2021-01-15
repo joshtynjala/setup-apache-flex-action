@@ -1,0 +1,54 @@
+name: Test Action
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+      - name: Check executables
+        run: |
+          Get-Command mxmlc
+          Get-Command compc
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+      - name: Check executables
+        run: |
+          which mxmlc
+          which compc
+
+  windows-air-version:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          air-version: "4.16.1"
+      - name: Check executables
+        run: |
+          Get-Command mxmlc
+          Get-Command compc
+
+  macos-air-version:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+      - name: Check executables
+        run: |
+          which mxmlc
+          which compc

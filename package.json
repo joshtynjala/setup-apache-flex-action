@@ -1,0 +1,26 @@
+{
+  "name": "setup-apache-flex",
+  "version": "1.0.0",
+  "private": true,
+  "description": "setup Apache Flex SDK action",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joshtynjala/setup-apache-flex-action.git"
+  },
+  "author": {
+    "name": "Josh Tynjala",
+    "url": "https://feathersui.com/"
+  },
+  "keywords": [
+    "actions",
+    "Apache Flex",
+    "setup"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/tool-cache": "^1.6.1",
+    "node-fetch": "^2.6.1"
+  }
+}
