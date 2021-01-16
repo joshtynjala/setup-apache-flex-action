@@ -35,6 +35,9 @@ async function setupApacheFlex() {
     const mirrorUrl = "http://flex.apache.org/single-mirror-url--xml.cgi";
 
     const mirrorResponse = await fetch(mirrorUrl);
+    if (!mirrorResponse.ok) {
+      throw new Error("Failed to load mirror for Apache Flex SDK");
+    }
     const mirror = await mirrorResponse.text();
 
     var archiveUrl = `${mirror}/flex/${flexVersion}/binaries/${filename}`;
