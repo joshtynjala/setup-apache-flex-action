@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 const core = require("@actions/core");
 const toolCache = require("@actions/tool-cache");
+const child_process = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -57,6 +58,14 @@ async function setupApacheFlex() {
     }
     core.addPath(path.resolve(flexHome, "bin"));
     core.exportVariable("FLEX_HOME", flexHome);
+
+    child_process.execSync(
+      "ant -f installer.xml -Dflash.sdk.version=32.0 -Dair.sdk.version=32.0 -Dinstaller=true -Ddo.flash.install=1 -Ddo.air.install=1 -Ddo.swfobject.install=1 -Ddo.fontswf.install=1 -Ddo.osmf.install=1 -Ddo.ofl.install=1",
+      {
+        cwd: flexHome,
+        stdio: "inherit",
+      }
+    );
   } catch (error) {
     core.setFailed(error.message);
   }
