@@ -1,49 +1,173 @@
 const fetch = require("node-fetch");
+const parseXML = require("@rgrove/parse-xml");
 const core = require("@actions/core");
 const toolCache = require("@actions/tool-cache");
 const child_process = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
+const sdkConfigParseErrorText =
+  "Failed to parse Apache Flex SDK configuration file";
+const sdkConfigURL =
+  "http://flex.apache.org/installer/sdk-installer-config-4.0.xml";
+
+async function loadSDKConfig() {
+  const sdkConfigResponse = await fetch(sdkConfigURL);
+  if (!sdkConfigResponse.ok) {
+    throw new Error("Failed to load Apache Flex SDK configuration file");
+  }
+  const sdkConfigText = await sdkConfigResponse.text();
+  const sdkConfigXML = parseXML(sdkConfigText);
+  return sdkConfigXML;
+}
+
+async function getMirrorURLPrefix(sdkConfigXML) {
+  if (!sdkConfigXML || !("children" in sdkConfigXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  const configXML = sdkConfigXML.children.find((child) => {
+    return child.type === "element" && child.name === "config";
+  });
+
+  if (!configXML || !("children" in configXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  const mirrorXML = configXML.children.find((child) => {
+    return (
+      child.type === "element" &&
+      child.name === "mirror" &&
+      "attributes" in child &&
+      child.attributes.name === "MirrorURLCGI"
+    );
+  });
+
+  if (!mirrorXML || !("attributes" in mirrorXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  const mirrorCGIFileName = mirrorXML.attributes.file;
+  const mirrorCGIURL = `https://flex.apache.org/${mirrorCGIFileName}`;
+
+  const mirrorResponse = await fetch(mirrorCGIURL);
+  if (!mirrorResponse.ok) {
+    throw new Error("Failed to load mirror for Apache Flex SDK");
+  }
+  return await mirrorResponse.text();
+}
+
+function getFlexSDKProducts(sdkConfigXML) {
+  if (!sdkConfigXML || !("children" in sdkConfigXML)) {
+    throw new Error();
+  }
+
+  const configXML = sdkConfigXML.children.find((child) => {
+    return child.type === "element" && child.name === "config";
+  });
+
+  if (!configXML || !("children" in configXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  const productsXML = configXML.children.find((child) => {
+    return child.type === "element" && child.name === "products";
+  });
+
+  if (!productsXML || !("children" in productsXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  const apacheFlexXML = productsXML.children.find((child) => {
+    return child.type === "element" && child.name === "ApacheFlexSDK";
+  });
+
+  if (!apacheFlexXML || !("attributes" in apacheFlexXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  return apacheFlexXML;
+}
+
+function getVersion(expectedVersion, apacheFlexXML) {
+  if (!apacheFlexXML || !("children" in apacheFlexXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  const versionsXML = apacheFlexXML.children.find((child) => {
+    return child.type === "element" && child.name === "versions";
+  });
+
+  if (!versionsXML || !("children" in versionsXML)) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  const versionLettersXML = versionsXML.children.filter((child) => {
+    return child.type === "element" && child.name.startsWith("version");
+  });
+
+  if (versionLettersXML.length === 0) {
+    throw new Error(sdkConfigParseErrorText);
+  }
+
+  return versionLettersXML.find((versionLetterXML) => {
+    return (
+      "attributes" in versionLetterXML &&
+      versionLetterXML.attributes.version === expectedVersion
+    );
+  });
+}
+
+function getVersionLetterURL(versionLetterXML, mirrorPrefix) {
+  let url = `${versionLetterXML.attributes.path}${versionLetterXML.attributes.file}`;
+  if (!/^https?:\/\//.test(url)) {
+    url = `${mirrorPrefix}/${url}`;
+  }
+  if (process.platform.startsWith("darwin")) {
+    url += ".tar.gz";
+  } else if (process.platform.startsWith("win")) {
+    url += ".zip";
+  } else {
+    throw new Error(
+      `Apache Flex SDK setup is not supported on platform: ${process.platform}`
+    );
+  }
+  return url;
+}
+
 async function setupApacheFlex() {
   try {
-    var flexVersion = core.getInput("flex-version");
+    let flexVersion = core.getInput("flex-version");
+    if (flexVersion && !/^\d+\.\d+.\d+$/.test(flexVersion)) {
+      throw new Error(`Invalid Apache Flex version: ${flexVersion}`);
+    }
+
+    const sdkConfigXML = await loadSDKConfig();
+    const apacheFlexXML = getFlexSDKProducts(sdkConfigXML);
+
     if (!flexVersion) {
-      flexVersion = "4.16.1";
-    } else if (!/^\d+\.\d+.\d+$/.test(flexVersion)) {
-      throw new Error("Invalid Apache Flex version: " + flexVersion);
+      flexVersion = apacheFlexXML.attributes.latestVersion;
     }
     console.log("Apache Flex version: " + flexVersion);
 
-    var installLocation = process.platform.startsWith("win")
+    const mirrorURLPrefix = await getMirrorURLPrefix(sdkConfigXML);
+
+    const flexDownloadURL = getVersionLetterURL(
+      getVersion(flexVersion, apacheFlexXML),
+      mirrorURLPrefix
+    );
+
+    const flexDownloadFileName = path.basename(
+      new URL(flexDownloadURL).pathname
+    );
+    const downloadedPath = await toolCache.downloadTool(
+      flexDownloadURL,
+      flexDownloadFileName
+    );
+
+    let installLocation = process.platform.startsWith("win")
       ? "c:\\ApacheFlexSDK"
       : "/usr/local/bin/ApacheFlexSDK";
-
-    var flexPlatform = null;
-    const baseFileName = `apache-flex-sdk-${flexVersion}-bin`;
-    var filename = baseFileName;
-    if (process.platform.startsWith("darwin")) {
-      flexPlatform = "mac";
-      filename += ".tar.gz";
-    } else if (process.platform.startsWith("win")) {
-      flexPlatform = "win";
-      filename += ".zip";
-    } else {
-      throw new Error("Apache Flex SDK setup is not supported on Linux");
-    }
-    console.log("Apache Flex platform: " + flexPlatform);
-
-    const mirrorUrl = "http://flex.apache.org/single-mirror-url--xml.cgi";
-
-    const mirrorResponse = await fetch(mirrorUrl);
-    if (!mirrorResponse.ok) {
-      throw new Error("Failed to load mirror for Apache Flex SDK");
-    }
-    const mirror = await mirrorResponse.text();
-
-    var archiveUrl = `${mirror}/flex/${flexVersion}/binaries/${filename}`;
-
-    var downloadedPath = await toolCache.downloadTool(archiveUrl, filename);
     fs.mkdirSync(installLocation);
 
     if (process.platform.startsWith("darwin")) {
@@ -52,8 +176,12 @@ async function setupApacheFlex() {
       await toolCache.extractZip(downloadedPath, installLocation);
     }
 
-    var flexHome = installLocation;
+    let flexHome = installLocation;
     if (process.platform.startsWith("darwin")) {
+      const baseFileName = flexDownloadFileName.substr(
+        0,
+        flexDownloadFileName.length - 7 //.tar.gz
+      );
       flexHome = path.resolve(installLocation, baseFileName);
     }
     core.addPath(path.resolve(flexHome, "bin"));

@@ -21,6 +21,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/tool-cache": "^1.6.1",
+    "@rgrove/parse-xml": "^2.0.4",
     "node-fetch": "^2.6.1"
   }
 }

@@ -18,6 +18,7 @@ jobs:
         run: |
           Get-Command mxmlc
           Get-Command compc
+          Get-Command adt
 
   macos:
     runs-on: macos-latest
@@ -28,6 +29,7 @@ jobs:
         run: |
           which mxmlc
           which compc
+          which adt
 
   windows-air-version:
     runs-on: windows-latest
@@ -40,6 +42,7 @@ jobs:
         run: |
           Get-Command mxmlc
           Get-Command compc
+          Get-Command adt
 
   macos-air-version:
     runs-on: macos-latest
@@ -52,3 +55,4 @@ jobs:
         run: |
           which mxmlc
           which compc
+          which adt
