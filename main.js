@@ -112,6 +112,9 @@ function getFlexVersionLetterBestMatch(/** @type string */ expectedVersion, apac
     throw new Error(sdkConfigParseErrorText);
   }
 
+  // default order is from oldest to newest, so let's reverse that
+  versionLettersXML.reverse();
+
   let bestMatch = null;
   const requestedParts = expectedVersion.split(".");
   for (let releaseXML of versionLettersXML) {
