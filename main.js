@@ -1,5 +1,6 @@
-const fetch = require("node-fetch");
-const parseXML = require("@rgrove/parse-xml");
+// @ts-check
+const fetch = require("node-fetch").default;
+const { parseXml } = require("@rgrove/parse-xml");
 const core = require("@actions/core");
 const toolCache = require("@actions/tool-cache");
 const child_process = require("child_process");
@@ -17,7 +18,7 @@ async function loadSDKConfig() {
     throw new Error("Failed to load Apache Flex SDK configuration file");
   }
   const sdkConfigText = await sdkConfigResponse.text();
-  const sdkConfigXML = parseXML(sdkConfigText);
+  const sdkConfigXML = parseXml(sdkConfigText);
   return sdkConfigXML;
 }
 
