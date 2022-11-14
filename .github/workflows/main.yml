@@ -24,6 +24,8 @@ jobs:
           Get-Command mxmlc
           Get-Command compc
           Get-Command adt
+          mxmlc -version
+          compc -version
           adt -version
 
   macos-adobe-air-version:
@@ -40,4 +42,6 @@ jobs:
           which mxmlc
           which compc
           which adt
+          mxmlc -version
+          compc -version
           adt -version
