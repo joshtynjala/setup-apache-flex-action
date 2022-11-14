@@ -91,7 +91,7 @@ function getFlexSDKProducts(sdkConfigXML) {
   return apacheFlexXML;
 }
 
-function getFlexVersionBestMatch(/** @type string */ expectedVersion, apacheFlexXML) {
+function getFlexVersionLetterBestMatch(/** @type string */ expectedVersion, apacheFlexXML) {
   if (!apacheFlexXML || !("children" in apacheFlexXML)) {
     throw new Error(sdkConfigParseErrorText);
   }
@@ -129,7 +129,7 @@ function getFlexVersionBestMatch(/** @type string */ expectedVersion, apacheFlex
     }
     if (matched) {
       // this assumes that the releases are in order from newest to oldest
-      bestMatch = releaseVersion;
+      bestMatch = releaseXML;
       break;
     }
   }
@@ -201,11 +201,8 @@ async function setupApacheFlex() {
     const sdkConfigXML = await loadSDKConfig();
     const mirrorURLPrefix = await getMirrorURLPrefix(sdkConfigXML);
     const apacheFlexXML = getFlexSDKProducts(sdkConfigXML);
-    flexVersion = getFlexVersionBestMatch(flexVersion, apacheFlexXML);
 
-    console.log("Apache Flex SDK version: " + flexVersion);
-
-    const flexHome = await downloadFlexSDK(flexVersion, mirrorURLPrefix);
+    const flexHome = await downloadFlexSDK(flexVersion, mirrorURLPrefix, apacheFlexXML);
 
     const airVersion = core.getInput("air-version", { required: true });
     const parsedMajorVersion = parseInt(airVersion.split(".")[0], 10);
@@ -220,9 +217,13 @@ async function setupApacheFlex() {
   }
 }
 
-async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string */ mirrorURLPrefix) {
+async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string */ mirrorURLPrefix, /** @type any */ apacheFlexXML) {
+  const flexVersionLetterXML = getFlexVersionLetterBestMatch(flexVersion, apacheFlexXML);
+
+  console.log("Apache Flex SDK version: " + flexVersionLetterXML.attributes.version);
+
   const flexDownloadURL = getFlexVersionLetterURL(
-    flexVersion,
+    flexVersionLetterXML,
     mirrorURLPrefix
   );
 
