@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<!--
+  Installs the the Apache Flex SDK with the Adobe AIR SDK from HARMAN.
+
+  Steps:
+
+  1. Download the Apache Flex SDK Binary Distribution
+     - Windows: apache-flex-sdk-4.16.1-bin.zip
+     - macOS: apache-flex-sdk-4.16.1-bin.tar.gz
+
+  2. Extract (unzip/untar) the Flex SDK Binary Distribution somewhere on your computer.
+
+  3. Download the AIR SDK from HARMAN. Do not extract!
+     - Windows: AIRSDK_Flex_Windows.zip
+     - macOS: AIRSDK_Flex_MacOS.zip
+
+  4. Copy harman-installer.xml (this file) and AIRSDK_Flex_(Windows/MacOS).zip
+     into the root directory of the extracted Flex SDK Binary Distribution.
+
+  4. In a terminal, run the following command (replace 50.0 with the correct version):
+
+     ant -f harman-installer.xml -Dair.sdk.version=50.0
+
+  5. After installation, you may safely delete harman-installer.xml and
+     AIR_SDK_(Windows|MacOS).zip
+-->
+<project name="harman-installer" default="install" basedir=".">
+  <property name="flexsdk" value="${basedir}"/>
+  <property name="installer" value="1"/>
+  <property name="installer.script" value="${flexsdk}/installer.xml"/>
+  <property name="usingDownloadCache" value="1"/>
+  <property name="downloadCacheFolder" value="${basedir}/harman-installer-cache"/>
+
+  <property name="do.air.install" value="1"/>
+  <property name="air.sdk.version" value="50.0"/>
+  <property name="air.sdk.url.server" value=""/>
+  <property name="air.sdk.url.folder" value="airsdk"/>
+  <condition property="air.sdk.url.file" value="AIRSDK_Flex_MacOS.dmg">
+      <os family="mac"/>
+  </condition>
+  <condition property="air.sdk.url.file" value="AIRSDK_Flex_Windows.zip">
+      <os family="windows"/>
+  </condition>
+  <loadresource property="air.sdk.url.file.base">
+    <concat>${air.sdk.url.file}</concat>
+    <filterchain>
+      <replaceregex pattern="(.*)\.[a-z]+" replace="\1" />
+    </filterchain>
+  </loadresource>
+  <property name="airsdk.zip" value="${basedir}/${air.sdk.url.file.base}.zip"/>
+
+  <property name="do.flash.install" value="1"/>
+  <property name="flash.sdk.version" value="${air.sdk.version}"/>
+  <loadresource property="flash.sdk.swfversion">
+    <concat>${air.sdk.version}</concat>
+    <filterchain>
+      <replaceregex pattern="(\d+)(\.\d+)+" replace="\1" />
+    </filterchain>
+  </loadresource>
+  <property name="flash.sdk.url.server" value=""/>
+  <property name="flash.sdk.url.folder" value="playerglobal"/>
+  <property name="flash.sdk.url.file" value="playerglobal.swc"/>
+
+  <property name="do.fontswf.install" value="1"/>
+  <property name="do.osmf.install" value="1"/>
+  <property name="do.ofl.install" value="1"/>
+  <property name="do.swfobject.install" value="1"/>
+
+  <condition property="isWin" value="1">
+      <os family="windows"/>
+  </condition>
+  <condition property="isMac" value="1">
+      <os family="mac"/>
+  </condition>
+
+  <fail message="Installing the Adobe AIR SDK from HARMAN for the Apache Flex SDK is not supported on this platform">
+    <condition>
+      <and>
+        <os family="unix"/>
+        <not>
+          <os family="mac"/>
+        </not>
+      </and>
+    </condition>
+  </fail>
+  <fail message="Missing ${airsdk.zip}">
+    <condition>
+      <not>
+        <resourceexists>
+          <file file="${airsdk.zip}"/>
+        </resourceexists>
+      </not>
+    </condition>
+  </fail>
+  <fail message="Missing Flex SDK installer script. Expected: ${flexsdk}/installer.xml">
+    <condition>
+      <not>
+        <resourceexists>
+          <file file="${flexsdk}/installer.xml"/>
+        </resourceexists>
+      </not>
+    </condition>
+  </fail>
+
+  <target name="install" depends="-prepare,-validate-cache-files,-installer,-cleanup"
+    description="Install SDK"/>
+
+  <target name="-installer" description="Runs the installer.xml script from the Flex SDK">
+    <ant antfile="${installer.script}" inheritAll="true" inheritRefs="true" useNativeBasedir="true">
+      <!--
+        we're overwriting the URL values, but the refs need to point to a real
+        id reference value from sdk-installer-config-4.0.xml
+      -->
+      <property name="air.sdk.url.server.ref" value="en_US"/>
+      <property name="air.sdk.url.folder.ref" value="en_US"/>
+      <property name="air.sdk.url.file.ref" value="en_US"/>
+      <property name="flash.sdk.url.server.ref" value="en_US"/>
+      <property name="flash.sdk.url.folder.ref" value="en_US"/>
+      <property name="flash.sdk.url.file.ref" value="en_US"/>
+      <property name="flash.sdk.swfversion.ref" value="en_US"/>
+    </ant>
+
+    <replace file="${flexsdk}/frameworks/flex-config.xml" token="{targetPlayerMajorVersion}.{targetPlayerMinorVersion}" value="${flash.sdk.version}"/>
+  </target>
+
+  <target name="-prepare" description="Unzips AIR SDK and copies playerglobal.swc to cache">
+    <mkdir dir="${downloadCacheFolder}"/>
+    <delete dir="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+    <delete file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file}"/>
+    <copy file="${airsdk.zip}"
+      tofile="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"
+      overwrite="true"/>
+    <antcall target="-mac-quarantine"/>
+    <antcall target="-unzip"/>
+    <copy file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}/frameworks/libs/player/32.0/playerglobal.swc"
+      tofile="${downloadCacheFolder}/${flash.sdk.url.folder}/${flash.sdk.url.file}"
+      overwrite="true"/>
+    <antcall target="-mac-dmg"/>
+    <delete dir="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+  </target>
+
+  <target name="-cleanup" description="Removes temporary files">
+    <delete dir="${downloadCacheFolder}"/>
+  </target>
+
+  <target name="-unzip" depends="-win-unzip,-mac-unzip"/>
+
+  <target name="-win-unzip" if="isWin">
+    <unzip src="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"
+      dest="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+  </target>
+
+  <target name="-mac-unzip" if="isMac">
+    <exec executable="unzip" failonerror="true">
+      <arg value="-q"/>
+      <arg value="-o"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
+      <arg value="-d"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+    </exec>
+  </target>
+
+  <target name="-mac-quarantine" if="isMac" description="Removes quarantine on macOS">
+    <exec executable="xattr" failonerror="true">
+      <arg value="-d"/>
+      <arg value="-r"/>
+      <arg value="com.apple.quarantine"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
+    </exec>
+  </target>
+
+  <target name="-mac-dmg" if="isMac" description="Converts AIRSDK_Flex_MacOS.zip to AIRSDK_Flex_MacOS.dmg">
+    <exec executable="hdiutil" failonerror="true">
+      <arg value="makehybrid"/>
+      <arg value="-quiet"/>
+      <arg value="-hfs"/>
+      <arg value="-o"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file}"/>
+      <arg value="-hfs-openfolder"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+      <arg value="-default-volume-name"/>
+      <arg value="AIR SDK"/>
+    </exec>
+    <delete file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
+  </target>
+
+  <target name="-validate-cache-files">
+    <fail message="Missing ${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file}">
+      <condition>
+        <and>
+          <isset property="usingDownloadCache"/>
+          <not>
+            <resourceexists>
+              <file file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file}"/>
+            </resourceexists>
+          </not>
+        </and>
+      </condition>
+    </fail>
+    <fail message="Missing ${downloadCacheFolder}/${flash.sdk.url.folder}/${flash.sdk.url.file}">
+      <condition>
+        <and>
+          <isset property="usingDownloadCache"/>
+          <not>
+            <resourceexists>
+              <file file="${downloadCacheFolder}/${flash.sdk.url.folder}/${flash.sdk.url.file}"/>
+            </resourceexists>
+          </not>
+        </and>
+      </condition>
+    </fail>
+  </target>
+</project>

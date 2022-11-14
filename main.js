@@ -265,7 +265,58 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
 }
 
 async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** @type string */ flexHome) {
-  throw new Error("Adobe AIR by HARMAN not yet supported");
+  const releasesResponse = await fetch(
+    "https://dcdu3ujoji.execute-api.us-east-1.amazonaws.com/production/releases"
+  );
+  const releases = await releasesResponse.json();
+
+  airVersion = getAIRVersionBestMatch(airVersion, releases.releases);
+  console.log(`Adobe AIR SDK (HARMAN) version: ${airVersion}`);
+
+  const urlsResponse = await fetch(
+    `https://dcdu3ujoji.execute-api.us-east-1.amazonaws.com/production/releases/${airVersion}/urls`
+  );
+  const urls = await urlsResponse.json();
+
+  var urlField = null;
+  if (process.platform.startsWith("darwin")) {
+    urlField = "AIR_Flex_Mac";
+  } else if (process.platform.startsWith("win")) {
+    urlField = "AIR_Flex_Win";
+  } else {
+    urlField = "AIR_Flex_Linux";
+  }
+  if (!urlField) {
+    // this probably shouldn't happen, but best to be safe
+    throw new Error(
+      `Adobe AIR SDK version '${airVersion}' not found for platform ${process.platform}`
+    );
+  }
+  console.log(`Adobe AIR SDK type: ${urlField}`);
+
+  const archiveUrl = `https://airsdk.harman.com${urls[urlField]}?license=accepted`;
+  const filename = path.basename(new URL(archiveUrl).pathname);
+
+  const downloadedPath = await toolCache.downloadTool(archiveUrl, filename);
+
+  const foundMajorMinor = /\d+\.\d+/.exec(airVersion);
+  if (foundMajorMinor === null) {
+    throw new Error(
+      `Failed to parse Adobe AIR SDK version: ${airVersion}`
+    );
+  }
+  const airSDKMajorMinor = foundMajorMinor[0];
+
+  const antScriptPath = path.resolve(__dirname, "harman-installer.xml");
+
+  child_process.execSync(
+    `ant -f ${antScriptPath} -Dflexsdk=${flexHome} -Dairsdk.zip=${downloadedPath} -Dair.sdk.version=${airSDKMajorMinor}`,
+    {
+      cwd: flexHome,
+      stdio: "inherit",
+    }
+  );
+  
 }
 
 function setupApacheFlexWithAdobeAIR(/** @type string */ airVersion, /** @type string */ flexHome) {
