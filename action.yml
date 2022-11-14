@@ -6,6 +6,15 @@ inputs:
   flex-version:
     description: "Version of the Apache Flex SDK (example: 4.16.1)"
     required: false
+  air-version:
+    description: "Version of the Adobe AIR SDK (example: 50.0)"
+    required: true
+  accept-air-license:
+    description: "Accept the Adobe AIR SDK License Agreement (example: true)"
+    required: true
+  air-license-base64:
+    description: Use with an encrypted secret to optionally provide a valid adt.lic file, encoded as a Base64 string
+    required: false
 
 runs:
   using: "node16"
