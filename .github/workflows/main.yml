@@ -18,7 +18,7 @@ jobs:
         with:
           flex-version: "4.16.1"
           air-version: "32.0"
-          accept-license: true
+          accept-air-license: true
       - name: Check executables
         run: |
           Get-Command mxmlc
@@ -34,7 +34,7 @@ jobs:
         with:
           flex-version: "4.16.1"
           air-version: "32.0"
-          accept-license: true
+          accept-air-license: true
       - name: Check executables
         run: |
           which mxmlc
