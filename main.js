@@ -8,6 +8,8 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
+const ENV_FLEX_HOME = "FLEX_HOME";
+
 const sdkConfigParseErrorText =
   "Failed to parse Apache Flex SDK configuration file";
 const sdkConfigURL =
@@ -258,7 +260,7 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
     flexHome = path.resolve(installLocation, baseFileName);
   }
   core.addPath(path.resolve(flexHome, "bin"));
-  core.exportVariable("FLEX_HOME", flexHome);
+  core.exportVariable(ENV_FLEX_HOME, flexHome);
   return flexHome;
 }
 
