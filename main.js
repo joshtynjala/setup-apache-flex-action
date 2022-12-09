@@ -297,7 +297,7 @@ async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** 
   const archiveUrl = `https://airsdk.harman.com${urls[urlField]}?license=accepted`;
   const filename = path.basename(new URL(archiveUrl).pathname);
 
-  const downloadedPath = await toolCache.downloadTool(archiveUrl, filename);
+  const downloadedPath = path.resolve(process.cwd(), await toolCache.downloadTool(archiveUrl, filename));
 
   const foundMajorMinor = /\d+\.\d+/.exec(airVersion);
   if (foundMajorMinor === null) {
