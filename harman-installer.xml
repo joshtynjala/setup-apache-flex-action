@@ -212,7 +212,7 @@
     </exec>
     <exec executable="tar" failonerror="true">
       <arg value="-cvjSf"/>
-      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.tbz2"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file}"/>
       <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
     </exec>
     <delete file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
