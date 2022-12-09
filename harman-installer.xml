@@ -41,7 +41,7 @@
   <condition property="air.sdk.url.file" value="AIRSDK_Flex_Windows.zip">
       <os family="windows"/>
   </condition>
-  <condition property="air.sdk.url.file" value="AIRSDK_Flex_Linux.zip">
+  <condition property="air.sdk.url.file" value="AIRSDK_Flex_Linux.tbz2">
     <and>
       <os family="unix"/>
       <not>
