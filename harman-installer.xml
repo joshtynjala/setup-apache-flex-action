@@ -152,6 +152,7 @@
       tofile="${downloadCacheFolder}/${flash.sdk.url.folder}/${flash.sdk.url.file}"
       overwrite="true"/>
     <antcall target="-mac-dmg"/>
+    <antcall target="-linux-tbz2"/>
     <delete dir="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
   </target>
 
@@ -197,6 +198,22 @@
       <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
       <arg value="-default-volume-name"/>
       <arg value="AIR SDK"/>
+    </exec>
+    <delete file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
+  </target>
+
+  <target name="-linux-tbz2" if="isLinux" description="Converts AIRSDK_Flex_Linux.zip to AIRSDK_Flex_Linux.tbz2">
+    <exec executable="unzip" failonerror="true">
+      <arg value="-q"/>
+      <arg value="-o"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
+      <arg value="-d"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+    </exec>
+    <exec executable="tar" failonerror="true">
+      <arg value="-cvjSf"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.tbz2"/>
+      <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
     </exec>
     <delete file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
   </target>
