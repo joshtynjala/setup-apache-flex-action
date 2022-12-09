@@ -245,14 +245,14 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
     : "/usr/local/bin/ApacheFlexSDK";
   fs.mkdirSync(installLocation);
 
-  if (process.platform.startsWith("darwin")) {
+  if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
     await toolCache.extractTar(downloadedPath, installLocation);
   } else if (process.platform.startsWith("win")) {
     await toolCache.extractZip(downloadedPath, installLocation);
   }
 
   let flexHome = installLocation;
-  if (process.platform.startsWith("darwin")) {
+  if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
     const baseFileName = flexDownloadFileName.substr(
       0,
       flexDownloadFileName.length - 7 //.tar.gz
@@ -283,7 +283,7 @@ async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** 
     urlField = "AIR_Flex_Mac";
   } else if (process.platform.startsWith("win")) {
     urlField = "AIR_Flex_Win";
-  } else {
+  } else if (process.platform.startsWith("linux")) {
     urlField = "AIR_Flex_Linux";
   }
   if (!urlField) {
