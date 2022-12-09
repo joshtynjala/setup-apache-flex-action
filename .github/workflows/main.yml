@@ -84,7 +84,54 @@ jobs:
   #         adt -version
   #         adt -license 2>&1 | grep -q "No license file"
 
-  ubuntu-harman-air-version:
+  # ubuntu-harman-air-version:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ./
+  #       with:
+  #         flex-version: "4.16.1"
+  #         air-version: "50.0"
+  #         accept-air-license: true
+  #     - name: Check executables
+  #       run: |
+  #         which mxmlc
+  #         which compc
+  #         which adt
+  #         mxmlc -version
+  #         compc -version
+  #         adt -version
+  #         adt -license 2>&1 | grep -q "No license file"
+
+  windows-harman-air-license:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+          air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
+      - name: Check license
+        run: |
+          pwsh -Command {If (adt -license 2>&1 | Select-String -Quiet "DeveloperID="){Exit 0}Else{Exit 1}}
+
+  macos-harman-air-license:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+          air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
+      - name: Check license
+        run: |
+          adt -license 2>&1 | grep -q "DeveloperID="
+
+  ubuntu-harman-air-license:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -93,12 +140,7 @@ jobs:
           flex-version: "4.16.1"
           air-version: "50.0"
           accept-air-license: true
-      - name: Check executables
+          air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
+      - name: Check license
         run: |
-          which mxmlc
-          which compc
-          which adt
-          mxmlc -version
-          compc -version
-          adt -version
-          adt -license 2>&1 | grep -q "No license file"
+          adt -license 2>&1 | grep -q "DeveloperID="
