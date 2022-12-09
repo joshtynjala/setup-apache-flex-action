@@ -174,7 +174,7 @@ function getFlexVersionLetterURL(versionLetterXML, mirrorPrefix) {
   if (!/^https?:\/\//.test(url)) {
     url = `${mirrorPrefix}/${url}`;
   }
-  if (process.platform.startsWith("darwin")) {
+  if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
     url += ".tar.gz";
   } else if (process.platform.startsWith("win")) {
     url += ".zip";
