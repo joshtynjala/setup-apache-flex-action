@@ -46,8 +46,27 @@ jobs:
   #         compc -version
   #         adt -version
 
-  windows-harman-air-version:
-    runs-on: windows-latest
+  # windows-harman-air-version:
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ./
+  #       with:
+  #         flex-version: "4.16.1"
+  #         air-version: "50.0"
+  #         accept-air-license: true
+  #     - name: Check executables
+  #       run: |
+  #         Get-Command mxmlc
+  #         Get-Command compc
+  #         Get-Command adt
+  #         mxmlc -version
+  #         compc -version
+  #         adt -version
+  #         pwsh -Command {If (adt -license 2>&1 | Select-String -Quiet "DeveloperID="){Exit 1}Else{Exit 0}}
+
+  macos-harman-air-version:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./
@@ -63,4 +82,4 @@ jobs:
           mxmlc -version
           compc -version
           adt -version
-          pwsh -Command {If (adt -license 2>&1 | Select-String -Quiet "DeveloperID="){Exit 1}Else{Exit 0}}
+          adt -license 2>&1 | grep -q "No license file"
