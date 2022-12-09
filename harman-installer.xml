@@ -6,15 +6,16 @@
 
   1. Download the Apache Flex SDK Binary Distribution
      - Windows: apache-flex-sdk-4.16.1-bin.zip
-     - macOS: apache-flex-sdk-4.16.1-bin.tar.gz
+     - macOS or Linux: apache-flex-sdk-4.16.1-bin.tar.gz
 
   2. Extract (unzip/untar) the Flex SDK Binary Distribution somewhere on your computer.
 
   3. Download the AIR SDK from HARMAN. Do not extract!
      - Windows: AIRSDK_Flex_Windows.zip
      - macOS: AIRSDK_Flex_MacOS.zip
+     - Linux: AIRSDK_Flex_Linux.zip
 
-  4. Copy harman-installer.xml (this file) and AIRSDK_Flex_(Windows/MacOS).zip
+  4. Copy harman-installer.xml (this file) and AIRSDK_Flex_(Windows|MacOS|Linux).zip
      into the root directory of the extracted Flex SDK Binary Distribution.
 
   4. In a terminal, run the following command (replace 50.0 with the correct version):
@@ -22,7 +23,7 @@
      ant -f harman-installer.xml -Dair.sdk.version=50.0
 
   5. After installation, you may safely delete harman-installer.xml and
-     AIR_SDK_(Windows|MacOS).zip
+     AIR_SDK_(Windows|MacOS|Linux).zip
 -->
 <project name="harman-installer" default="install" basedir=".">
   <property name="flexsdk" value="${basedir}"/>
@@ -89,16 +90,6 @@
     </and>
   </condition>
 
-  <!-- <fail message="Installing the Adobe AIR SDK from HARMAN for the Apache Flex SDK is not supported on this platform">
-    <condition>
-      <and>
-        <os family="unix"/>
-        <not>
-          <os family="mac"/>
-        </not>
-      </and>
-    </condition>
-  </fail> -->
   <fail message="Missing ${airsdk.zip}">
     <condition>
       <not>
