@@ -103,13 +103,51 @@ jobs:
   #         adt -version
   #         adt -license 2>&1 | grep -q "No license file"
 
-  ubuntu-harman-air-version-major:
+  # ubuntu-harman-air-version-major:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ./
+  #       with:
+  #         flex-version: "4.16.1"
+  #         air-version: "50"
+  #         accept-air-license: true
+  #     - name: Check executables
+  #       run: |
+  #         which mxmlc
+  #         which compc
+  #         which adt
+  #         mxmlc -version
+  #         compc -version
+  #         adt -version
+  #         adt -license 2>&1 | grep -q "No license file"
+
+  # ubuntu-harman-air-version-exact:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ./
+  #       with:
+  #         flex-version: "4.16.1"
+  #         air-version: "33.1.1.929"
+  #         accept-air-license: true
+  #     - name: Check executables
+  #       run: |
+  #         which mxmlc
+  #         which compc
+  #         which adt
+  #         mxmlc -version
+  #         compc -version
+  #         adt -version
+  #         adt -license 2>&1 | grep -q "No license file"
+
+  ubuntu-flex-version-major:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./
         with:
-          flex-version: "4.16.1"
+          flex-version: "4"
           air-version: "50"
           accept-air-license: true
       - name: Check executables
@@ -122,14 +160,14 @@ jobs:
           adt -version
           adt -license 2>&1 | grep -q "No license file"
 
-  ubuntu-harman-air-version-exact:
+  ubuntu-flex-version-major-minor:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./
         with:
-          flex-version: "4.16.1"
-          air-version: "33.1.1.929"
+          flex-version: "4.14"
+          air-version: "50"
           accept-air-license: true
       - name: Check executables
         run: |
