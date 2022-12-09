@@ -148,7 +148,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4"
-          air-version: "50"
+          air-version: "50.0"
           accept-air-license: true
       - name: Check executables
         run: |
@@ -167,7 +167,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16"
-          air-version: "50"
+          air-version: "50.0"
           accept-air-license: true
       - name: Check executables
         run: |
