@@ -41,6 +41,14 @@
   <condition property="air.sdk.url.file" value="AIRSDK_Flex_Windows.zip">
       <os family="windows"/>
   </condition>
+  <condition property="air.sdk.url.file" value="AIRSDK_Flex_Linux.zip">
+    <and>
+      <os family="unix"/>
+      <not>
+        <os family="mac"/>
+      </not>
+    </and>
+  </condition>
   <loadresource property="air.sdk.url.file.base">
     <concat>${air.sdk.url.file}</concat>
     <filterchain>
