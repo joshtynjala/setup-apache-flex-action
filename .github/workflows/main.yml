@@ -10,136 +10,136 @@ on:
 
 jobs:
 
-  # windows-adobe-air-version:
-  #   runs-on: windows-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "32.0"
-  #         accept-air-license: true
-  #     - name: Check executables
-  #       run: |
-  #         Get-Command mxmlc
-  #         Get-Command compc
-  #         Get-Command adt
-  #         mxmlc -version
-  #         compc -version
-  #         adt -version
+  windows-adobe-air-version:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "32.0"
+          accept-air-license: true
+      - name: Check executables
+        run: |
+          Get-Command mxmlc
+          Get-Command compc
+          Get-Command adt
+          mxmlc -version
+          compc -version
+          adt -version
 
-  # macos-adobe-air-version:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "32.0"
-  #         accept-air-license: true
-  #     - name: Check executables
-  #       run: |
-  #         which mxmlc
-  #         which compc
-  #         which adt
-  #         mxmlc -version
-  #         compc -version
-  #         adt -version
+  macos-adobe-air-version:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "32.0"
+          accept-air-license: true
+      - name: Check executables
+        run: |
+          which mxmlc
+          which compc
+          which adt
+          mxmlc -version
+          compc -version
+          adt -version
 
-  # windows-harman-air-version:
-  #   runs-on: windows-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "50.0"
-  #         accept-air-license: true
-  #     - name: Check executables
-  #       run: |
-  #         Get-Command mxmlc
-  #         Get-Command compc
-  #         Get-Command adt
-  #         mxmlc -version
-  #         compc -version
-  #         adt -version
-  #         pwsh -Command {If (adt -license 2>&1 | Select-String -Quiet "DeveloperID="){Exit 1}Else{Exit 0}}
+  windows-harman-air-version:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+      - name: Check executables
+        run: |
+          Get-Command mxmlc
+          Get-Command compc
+          Get-Command adt
+          mxmlc -version
+          compc -version
+          adt -version
+          pwsh -Command {If (adt -license 2>&1 | Select-String -Quiet "DeveloperID="){Exit 1}Else{Exit 0}}
 
-  # macos-harman-air-version:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "50.0"
-  #         accept-air-license: true
-  #     - name: Check executables
-  #       run: |
-  #         which mxmlc
-  #         which compc
-  #         which adt
-  #         mxmlc -version
-  #         compc -version
-  #         adt -version
-  #         adt -license 2>&1 | grep -q "No license file"
+  macos-harman-air-version:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+      - name: Check executables
+        run: |
+          which mxmlc
+          which compc
+          which adt
+          mxmlc -version
+          compc -version
+          adt -version
+          adt -license 2>&1 | grep -q "No license file"
 
-  # ubuntu-harman-air-version:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "50.0"
-  #         accept-air-license: true
-  #     - name: Check executables
-  #       run: |
-  #         which mxmlc
-  #         which compc
-  #         which adt
-  #         mxmlc -version
-  #         compc -version
-  #         adt -version
-  #         adt -license 2>&1 | grep -q "No license file"
+  ubuntu-harman-air-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+      - name: Check executables
+        run: |
+          which mxmlc
+          which compc
+          which adt
+          mxmlc -version
+          compc -version
+          adt -version
+          adt -license 2>&1 | grep -q "No license file"
 
-  # ubuntu-harman-air-version-major:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "50"
-  #         accept-air-license: true
-  #     - name: Check executables
-  #       run: |
-  #         which mxmlc
-  #         which compc
-  #         which adt
-  #         mxmlc -version
-  #         compc -version
-  #         adt -version
-  #         adt -license 2>&1 | grep -q "No license file"
+  ubuntu-harman-air-version-major:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50"
+          accept-air-license: true
+      - name: Check executables
+        run: |
+          which mxmlc
+          which compc
+          which adt
+          mxmlc -version
+          compc -version
+          adt -version
+          adt -license 2>&1 | grep -q "No license file"
 
-  # ubuntu-harman-air-version-exact:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "33.1.1.929"
-  #         accept-air-license: true
-  #     - name: Check executables
-  #       run: |
-  #         which mxmlc
-  #         which compc
-  #         which adt
-  #         mxmlc -version
-  #         compc -version
-  #         adt -version
-  #         adt -license 2>&1 | grep -q "No license file"
+  ubuntu-harman-air-version-exact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "33.1.1.929"
+          accept-air-license: true
+      - name: Check executables
+        run: |
+          which mxmlc
+          which compc
+          which adt
+          mxmlc -version
+          compc -version
+          adt -version
+          adt -license 2>&1 | grep -q "No license file"
 
   ubuntu-flex-version-major:
     runs-on: ubuntu-latest
@@ -166,7 +166,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./
         with:
-          flex-version: "4.14"
+          flex-version: "4.16"
           air-version: "50"
           accept-air-license: true
       - name: Check executables
@@ -179,44 +179,44 @@ jobs:
           adt -version
           adt -license 2>&1 | grep -q "No license file"
 
-  # windows-harman-air-license:
-  #   runs-on: windows-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "50.0"
-  #         accept-air-license: true
-  #         air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
-  #     - name: Check license
-  #       run: |
-  #         pwsh -Command {If (adt -license 2>&1 | Select-String -Quiet "DeveloperID="){Exit 0}Else{Exit 1}}
+  windows-harman-air-license:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+          air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
+      - name: Check license
+        run: |
+          pwsh -Command {If (adt -license 2>&1 | Select-String -Quiet "DeveloperID="){Exit 0}Else{Exit 1}}
 
-  # macos-harman-air-license:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "50.0"
-  #         accept-air-license: true
-  #         air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
-  #     - name: Check license
-  #       run: |
-  #         adt -license 2>&1 | grep -q "DeveloperID="
+  macos-harman-air-license:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+          air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
+      - name: Check license
+        run: |
+          adt -license 2>&1 | grep -q "DeveloperID="
 
-  # ubuntu-harman-air-license:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       with:
-  #         flex-version: "4.16.1"
-  #         air-version: "50.0"
-  #         accept-air-license: true
-  #         air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
-  #     - name: Check license
-  #       run: |
-  #         adt -license 2>&1 | grep -q "DeveloperID="
+  ubuntu-harman-air-license:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          flex-version: "4.16.1"
+          air-version: "50.0"
+          accept-air-license: true
+          air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
+      - name: Check license
+        run: |
+          adt -license 2>&1 | grep -q "DeveloperID="
