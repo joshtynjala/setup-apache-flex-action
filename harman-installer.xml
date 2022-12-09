@@ -72,8 +72,16 @@
   <condition property="isMac" value="1">
       <os family="mac"/>
   </condition>
+  <condition property="isLinux" value="1">
+    <and>
+      <os family="unix"/>
+      <not>
+        <os family="mac"/>
+      </not>
+    </and>
+  </condition>
 
-  <fail message="Installing the Adobe AIR SDK from HARMAN for the Apache Flex SDK is not supported on this platform">
+  <!-- <fail message="Installing the Adobe AIR SDK from HARMAN for the Apache Flex SDK is not supported on this platform">
     <condition>
       <and>
         <os family="unix"/>
@@ -82,7 +90,7 @@
         </not>
       </and>
     </condition>
-  </fail>
+  </fail> -->
   <fail message="Missing ${airsdk.zip}">
     <condition>
       <not>
@@ -143,14 +151,14 @@
     <delete dir="${downloadCacheFolder}"/>
   </target>
 
-  <target name="-unzip" depends="-win-unzip,-mac-unzip"/>
+  <target name="-unzip" depends="-win-unzip,-unix-unzip"/>
 
   <target name="-win-unzip" if="isWin">
     <unzip src="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"
       dest="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
   </target>
 
-  <target name="-mac-unzip" if="isMac">
+  <target name="-unix-unzip" unless="isWin">
     <exec executable="unzip" failonerror="true">
       <arg value="-q"/>
       <arg value="-o"/>
