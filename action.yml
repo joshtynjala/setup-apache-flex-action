@@ -5,7 +5,7 @@ description: Action to setup Apache Flex SDK
 inputs:
   flex-version:
     description: "Version of the Apache Flex SDK (example: 4.16.1)"
-    required: false
+    required: true
   air-version:
     description: "Version of the Adobe AIR SDK (example: 50.0)"
     required: true
