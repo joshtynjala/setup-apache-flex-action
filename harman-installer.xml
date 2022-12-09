@@ -211,9 +211,11 @@
       <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
     </exec>
     <exec executable="tar" failonerror="true">
-      <arg value="-cvjSf"/>
+      <arg value="-cjSf"/>
       <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file}"/>
+      <arg value="-C"/>
       <arg value="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
+      <arg value="."/>
     </exec>
     <delete file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"/>
   </target>
