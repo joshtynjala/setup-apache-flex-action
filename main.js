@@ -9,6 +9,7 @@ const os = require("os");
 const path = require("path");
 
 const ENV_FLEX_HOME = "FLEX_HOME";
+const FLEX_TOOL_CACHE_NAME = "apache-flex";
 
 const sdkConfigParseErrorText =
   "Failed to parse Apache Flex SDK configuration file";
@@ -225,7 +226,7 @@ async function setupApacheFlex() {
 async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string */ mirrorURLPrefix, /** @type any */ apacheFlexXML) {
   const flexVersionLetterXML = getFlexVersionLetterBestMatch(flexVersion, apacheFlexXML);
 
-  console.log("Apache Flex SDK version: " + flexVersionLetterXML.attributes.version);
+  core.info("Apache Flex SDK version: " + flexVersionLetterXML.attributes.version);
 
   const flexDownloadURL = getFlexVersionLetterURL(
     flexVersionLetterXML,
@@ -251,17 +252,23 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
     await toolCache.extractZip(downloadedPath, installLocation);
   }
 
-  let flexHome = installLocation;
+  let extractedLocation = installLocation;
   if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
     const baseFileName = flexDownloadFileName.substr(
       0,
       flexDownloadFileName.length - 7 //.tar.gz
     );
-    flexHome = path.resolve(installLocation, baseFileName);
+    extractedLocation = path.resolve(installLocation, baseFileName);
   }
-  core.addPath(path.resolve(flexHome, "bin"));
-  core.exportVariable(ENV_FLEX_HOME, flexHome);
-  return flexHome;
+
+  const cacheLocation = await toolCache.cacheDir(
+    extractedLocation,
+    FLEX_TOOL_CACHE_NAME,
+    flexVersion
+  );
+  core.addPath(path.resolve(cacheLocation, "bin"));
+  core.exportVariable(ENV_FLEX_HOME, cacheLocation);
+  return cacheLocation;
 }
 
 async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** @type string */ flexHome) {
@@ -271,7 +278,7 @@ async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** 
   const releases = await releasesResponse.json();
 
   airVersion = getAIRVersionBestMatch(airVersion, releases.releases);
-  console.log(`Adobe AIR SDK (HARMAN) version: ${airVersion}`);
+  core.info(`Adobe AIR SDK (HARMAN) version: ${airVersion}`);
 
   const urlsResponse = await fetch(
     `https://dcdu3ujoji.execute-api.us-east-1.amazonaws.com/production/releases/${airVersion}/urls`
@@ -292,7 +299,7 @@ async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** 
       `Adobe AIR SDK version '${airVersion}' not found for platform ${process.platform}`
     );
   }
-  console.log(`Adobe AIR SDK type: ${urlField}`);
+  core.info(`Adobe AIR SDK type: ${urlField}`);
 
   const archiveUrl = `https://airsdk.harman.com${urls[urlField]}?license=accepted`;
   const filename = path.basename(new URL(archiveUrl).pathname);
