@@ -228,44 +228,52 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
 
   core.info("Apache Flex SDK version: " + flexVersionLetterXML.attributes.version);
 
-  const flexDownloadURL = getFlexVersionLetterURL(
-    flexVersionLetterXML,
-    mirrorURLPrefix
-  );
-
-  const flexDownloadFileName = path.basename(
-    new URL(flexDownloadURL).pathname
-  );
-  const downloadedPath = await toolCache.downloadTool(
-    flexDownloadURL,
-    flexDownloadFileName
-  );
-
-  const installLocation = process.platform.startsWith("win")
-    ? "c:\\ApacheFlexSDK"
-    : "/usr/local/bin/ApacheFlexSDK";
-  fs.mkdirSync(installLocation);
-
-  if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
-    await toolCache.extractTar(downloadedPath, installLocation);
-  } else if (process.platform.startsWith("win")) {
-    await toolCache.extractZip(downloadedPath, installLocation);
-  }
-
-  let extractedLocation = installLocation;
-  if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
-    const baseFileName = flexDownloadFileName.substr(
-      0,
-      flexDownloadFileName.length - 7 //.tar.gz
+  let cacheLocation = toolCache.find(FLEX_TOOL_CACHE_NAME, flexVersion);
+  if (cacheLocation) {
+    core.info(`Resolved Apache Flex SDK ${flexVersion} from tool-cache`);
+  } else {
+    core.info(
+      `Apache Flex SDK ${flexVersion} was not found in tool-cache. Trying to download...`
     );
-    extractedLocation = path.resolve(installLocation, baseFileName);
-  }
+    const flexDownloadURL = getFlexVersionLetterURL(
+      flexVersionLetterXML,
+      mirrorURLPrefix
+    );
 
-  const cacheLocation = await toolCache.cacheDir(
-    extractedLocation,
-    FLEX_TOOL_CACHE_NAME,
-    flexVersion
-  );
+    const flexDownloadFileName = path.basename(
+      new URL(flexDownloadURL).pathname
+    );
+    const downloadedPath = await toolCache.downloadTool(
+      flexDownloadURL,
+      flexDownloadFileName
+    );
+
+    const installLocation = process.platform.startsWith("win")
+      ? "c:\\ApacheFlexSDK"
+      : "/usr/local/bin/ApacheFlexSDK";
+    fs.mkdirSync(installLocation);
+
+    if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
+      await toolCache.extractTar(downloadedPath, installLocation);
+    } else if (process.platform.startsWith("win")) {
+      await toolCache.extractZip(downloadedPath, installLocation);
+    }
+
+    let extractedLocation = installLocation;
+    if (process.platform.startsWith("darwin") || process.platform.startsWith("linux")) {
+      const baseFileName = flexDownloadFileName.substr(
+        0,
+        flexDownloadFileName.length - 7 //.tar.gz
+      );
+      extractedLocation = path.resolve(installLocation, baseFileName);
+    }
+
+    cacheLocation = await toolCache.cacheDir(
+      extractedLocation,
+      FLEX_TOOL_CACHE_NAME,
+      flexVersion
+    );
+  }
   core.addPath(path.resolve(cacheLocation, "bin"));
   core.exportVariable(ENV_FLEX_HOME, cacheLocation);
   return cacheLocation;
