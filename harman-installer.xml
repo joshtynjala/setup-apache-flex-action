@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <!--
   Installs the the Apache Flex SDK with the Adobe AIR SDK from HARMAN.
+  
+  Note: This script runs with Apache Ant. https://ant.apache.org/
 
   Steps:
 
