@@ -230,9 +230,9 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
 
   let cacheLocation = toolCache.find(FLEX_TOOL_CACHE_NAME, flexVersion);
   if (cacheLocation) {
-    core.info(`Resolved Apache Flex SDK ${flexVersion} from tool-cache`);
+    core.debug(`Resolved Apache Flex SDK ${flexVersion} from tool-cache at: ${cacheLocation}`);
   } else {
-    core.info(
+    core.debug(
       `Apache Flex SDK ${flexVersion} was not found in tool-cache. Trying to download...`
     );
     const flexDownloadURL = getFlexVersionLetterURL(
@@ -273,6 +273,9 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
       FLEX_TOOL_CACHE_NAME,
       flexVersion
     );
+    core.debug(
+      `Apache Flex SDK ${flexVersion} added to tool-cache at: ${cacheLocation}`
+    );
   }
   core.addPath(path.resolve(cacheLocation, "bin"));
   core.exportVariable(ENV_FLEX_HOME, cacheLocation);
@@ -307,7 +310,7 @@ async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** 
       `Adobe AIR SDK version '${airVersion}' not found for platform ${process.platform}`
     );
   }
-  core.info(`Adobe AIR SDK type: ${urlField}`);
+  core.debug(`Adobe AIR SDK type: ${urlField}`);
 
   const archiveUrl = `https://airsdk.harman.com${urls[urlField]}?license=accepted`;
   const filename = path.basename(new URL(archiveUrl).pathname);
