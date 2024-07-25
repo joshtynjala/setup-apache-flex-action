@@ -130,12 +130,21 @@
     </ant>
 
     <replace file="${flexsdk}/frameworks/flex-config.xml" token="{targetPlayerMajorVersion}.{targetPlayerMinorVersion}" value="${flash.sdk.version}"/>
+
+    <!--
+        workaround for installer.xml failing to copy everything from lib.
+        grab the rest of the files that we saved in the cache.
+    -->
+    <copy todir="${flexsdk}/lib" overwrite="true">
+      <fileset dir="${downloadCacheFolder}/lib-backup"/>
+    </copy>
   </target>
 
-  <target name="-prepare" description="Unzips AIR SDK and copies playerglobal.swc to cache">
+  <target name="-prepare" description="Unzips AIR SDK and copies playerglobal.swc and lib directory to cache">
     <mkdir dir="${downloadCacheFolder}"/>
     <delete dir="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
     <delete file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file}"/>
+    <delete file="${downloadCacheFolder}/lib-backup"/>
     <copy file="${airsdk.zip}"
       tofile="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}.zip"
       overwrite="true"/>
@@ -144,6 +153,14 @@
     <copy file="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}/frameworks/libs/player/32.0/playerglobal.swc"
       tofile="${downloadCacheFolder}/${flash.sdk.url.folder}/${flash.sdk.url.file}"
       overwrite="true"/>
+    <!--
+      workaround for installer.xml failing to copy everything from lib. we'll
+      copy it into the cache for now.
+    -->
+    <copy todir="${downloadCacheFolder}/lib-backup"
+      overwrite="true">
+      <fileset dir="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}/lib"/>
+    </copy>
     <antcall target="-mac-dmg"/>
     <antcall target="-linux-tbz2"/>
     <delete dir="${downloadCacheFolder}/${air.sdk.url.folder}/${air.sdk.url.file.base}"/>
