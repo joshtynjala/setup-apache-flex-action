@@ -19,6 +19,7 @@ jobs:
           accept-air-license: true
       - name: Check executables
         run: |
+          Test-Path -Path $Env:FLEX_HOME
           Get-Command mxmlc
           Get-Command compc
           Get-Command adt
@@ -37,6 +38,7 @@ jobs:
           accept-air-license: true
       - name: Check executables
         run: |
+          test -d "$FLEX_HOME"
           which mxmlc
           which compc
           which adt
@@ -51,10 +53,12 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
       - name: Check executables
         run: |
+          Test-Path -Path $Env:FLEX_HOME
+          Test-Path -Path $Env:FLEX_HOME\lib\bouncycastle
           Get-Command mxmlc
           Get-Command compc
           Get-Command adt
@@ -70,10 +74,12 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
       - name: Check executables
         run: |
+          test -d "$FLEX_HOME"
+          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -89,10 +95,12 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
       - name: Check executables
         run: |
+          test -d "$FLEX_HOME"
+          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -108,10 +116,12 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "50"
+          air-version: "51"
           accept-air-license: true
       - name: Check executables
         run: |
+          test -d "$FLEX_HOME"
+          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -131,6 +141,7 @@ jobs:
           accept-air-license: true
       - name: Check executables
         run: |
+          test -d "$FLEX_HOME"
           which mxmlc
           which compc
           which adt
@@ -146,10 +157,12 @@ jobs:
       - uses: ./
         with:
           flex-version: "4"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
       - name: Check executables
         run: |
+          test -d "$FLEX_HOME"
+          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -165,10 +178,12 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
       - name: Check executables
         run: |
+          test -d "$FLEX_HOME"
+          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -184,7 +199,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
           air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
       - name: Check license
@@ -198,7 +213,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
           air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
       - name: Check license
@@ -212,7 +227,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "50.0"
+          air-version: "51.0"
           accept-air-license: true
           air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
       - name: Check license
