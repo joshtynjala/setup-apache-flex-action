@@ -53,7 +53,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
       - name: Check executables
         run: |
@@ -195,7 +195,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
           air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
       - name: Check license
@@ -209,7 +209,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
           air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
       - name: Check license
@@ -223,7 +223,7 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
           air-license-base64: ${{ secrets.AIR_SDK_LICENSE_FILE }}
       - name: Check license
