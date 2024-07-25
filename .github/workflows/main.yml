@@ -74,12 +74,11 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
       - name: Check executables
         run: |
           test -d "$FLEX_HOME"
-          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -95,12 +94,11 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
       - name: Check executables
         run: |
           test -d "$FLEX_HOME"
-          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -116,12 +114,11 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "51"
+          air-version: "50"
           accept-air-license: true
       - name: Check executables
         run: |
           test -d "$FLEX_HOME"
-          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -137,11 +134,12 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16.1"
-          air-version: "33.1.1.929"
+          air-version: "51.0.1.4"
           accept-air-license: true
       - name: Check executables
         run: |
           test -d "$FLEX_HOME"
+          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -157,12 +155,11 @@ jobs:
       - uses: ./
         with:
           flex-version: "4"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
       - name: Check executables
         run: |
           test -d "$FLEX_HOME"
-          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
@@ -178,12 +175,11 @@ jobs:
       - uses: ./
         with:
           flex-version: "4.16"
-          air-version: "51.0"
+          air-version: "50.0"
           accept-air-license: true
       - name: Check executables
         run: |
           test -d "$FLEX_HOME"
-          test -d "$FLEX_HOME/lib/bouncycastle"
           which mxmlc
           which compc
           which adt
