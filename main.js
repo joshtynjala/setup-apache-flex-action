@@ -203,7 +203,7 @@ async function setupApacheFlex() {
       fs.writeFileSync(licensePath, licenseBuffer);
     }
 
-    let flexVersion = core.getInput("flex-version", { required: true });
+    const flexVersion = core.getInput("flex-version", { required: true });
     const sdkConfigXML = await loadSDKConfig();
     const mirrorURLPrefix = await getMirrorURLPrefix(sdkConfigXML);
     const apacheFlexXML = getFlexSDKProducts(sdkConfigXML);
