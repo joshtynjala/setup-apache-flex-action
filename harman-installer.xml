@@ -55,7 +55,7 @@
   <loadresource property="air.sdk.url.file.base">
     <concat>${air.sdk.url.file}</concat>
     <filterchain>
-      <replaceregex pattern="(.*)\.[a-z]+" replace="\1" />
+      <replaceregex pattern="(.*)\.[A-Za-z0-9]+" replace="\1" />
     </filterchain>
   </loadresource>
   <property name="airsdk.zip" value="${basedir}/${air.sdk.url.file.base}.zip"/>
