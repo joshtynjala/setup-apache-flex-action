@@ -1,5 +1,4 @@
 // @ts-check
-const fetch = require("node-fetch").default;
 const { parseXml } = require("@rgrove/parse-xml");
 const core = require("@actions/core");
 const toolCache = require("@actions/tool-cache");
