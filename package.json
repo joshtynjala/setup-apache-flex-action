@@ -3,7 +3,8 @@
   "version": "2.1.0",
   "private": true,
   "description": "setup Apache Flex SDK action",
-  "main": "main.js",
+  "type": "module",
+  "main": "main.mjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/joshtynjala/setup-apache-flex-action.git"
@@ -19,9 +20,9 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^2.0.3",
-    "@actions/tool-cache": "^3.0.1",
-    "@rgrove/parse-xml": "^4.2.0"
+    "@actions/core": "^3.0.1",
+    "@actions/tool-cache": "^4.0.0",
+    "@rgrove/parse-xml": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.12.2"

@@ -1,11 +1,11 @@
 // @ts-check
 const { parseXml } = require("@rgrove/parse-xml");
-const core = require("@actions/core");
-const toolCache = require("@actions/tool-cache");
-const child_process = require("child_process");
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
+import * as core from '@actions/core';
+import * as toolCache from "@actions/tool-cache";
+import * as fs from "node:fs";
+import * as os from "node:os";
+import * as path from "node:path";
+import * as child_process from "node:child_process";
 
 const ENV_FLEX_HOME = "FLEX_HOME";
 const FLEX_TOOL_CACHE_NAME = "apache-flex";
@@ -25,12 +25,12 @@ async function loadSDKConfig() {
   return sdkConfigXML;
 }
 
-async function getMirrorURLPrefix(sdkConfigXML) {
+async function getMirrorURLPrefix(/** @type any */ sdkConfigXML) {
   if (!sdkConfigXML || !("children" in sdkConfigXML)) {
     throw new Error(sdkConfigParseErrorText);
   }
 
-  const configXML = sdkConfigXML.children.find((child) => {
+  const configXML = sdkConfigXML.children.find((/** @type any */ child) => {
     return child.type === "element" && child.name === "config";
   });
 
@@ -38,7 +38,7 @@ async function getMirrorURLPrefix(sdkConfigXML) {
     throw new Error(sdkConfigParseErrorText);
   }
 
-  const mirrorXML = configXML.children.find((child) => {
+  const mirrorXML = configXML.children.find((/** @type any */ child) => {
     return (
       child.type === "element" &&
       child.name === "mirror" &&
@@ -61,12 +61,12 @@ async function getMirrorURLPrefix(sdkConfigXML) {
   return await mirrorResponse.text();
 }
 
-function getFlexSDKProducts(sdkConfigXML) {
+function getFlexSDKProducts(/** @type any */ sdkConfigXML) {
   if (!sdkConfigXML || !("children" in sdkConfigXML)) {
     throw new Error();
   }
 
-  const configXML = sdkConfigXML.children.find((child) => {
+  const configXML = sdkConfigXML.children.find((/** @type any */ child) => {
     return child.type === "element" && child.name === "config";
   });
 
@@ -74,7 +74,7 @@ function getFlexSDKProducts(sdkConfigXML) {
     throw new Error(sdkConfigParseErrorText);
   }
 
-  const productsXML = configXML.children.find((child) => {
+  const productsXML = configXML.children.find((/** @type any */ child) => {
     return child.type === "element" && child.name === "products";
   });
 
@@ -82,7 +82,7 @@ function getFlexSDKProducts(sdkConfigXML) {
     throw new Error(sdkConfigParseErrorText);
   }
 
-  const apacheFlexXML = productsXML.children.find((child) => {
+  const apacheFlexXML = productsXML.children.find((/** @type any */ child) => {
     return child.type === "element" && child.name === "ApacheFlexSDK";
   });
 
@@ -93,12 +93,12 @@ function getFlexSDKProducts(sdkConfigXML) {
   return apacheFlexXML;
 }
 
-function getFlexVersionLetterBestMatch(/** @type string */ expectedVersion, apacheFlexXML) {
+function getFlexVersionLetterBestMatch(/** @type string */ expectedVersion, /** @type any */ apacheFlexXML) {
   if (!apacheFlexXML || !("children" in apacheFlexXML)) {
     throw new Error(sdkConfigParseErrorText);
   }
 
-  const versionsXML = apacheFlexXML.children.find((child) => {
+  const versionsXML = apacheFlexXML.children.find((/** @type any */ child) => {
     return child.type === "element" && child.name === "versions";
   });
 
@@ -106,7 +106,7 @@ function getFlexVersionLetterBestMatch(/** @type string */ expectedVersion, apac
     throw new Error(sdkConfigParseErrorText);
   }
 
-  const versionLettersXML = versionsXML.children.filter((child) => {
+  const versionLettersXML = versionsXML.children.filter((/** @type any */ child) => {
     return child.type === "element" && child.name.startsWith("version");
   });
 
@@ -169,7 +169,7 @@ function getAIRVersionBestMatch(/** @type string */ airVersion, /** @type {any[]
   return bestMatch;
 }
 
-function getFlexVersionLetterURL(versionLetterXML, mirrorPrefix) {
+function getFlexVersionLetterURL(/** @type any */ versionLetterXML, /** @type string */ mirrorPrefix) {
   let url = `${versionLetterXML.attributes.path}${versionLetterXML.attributes.file}`;
   if (!/^https?:\/\//.test(url)) {
     url = `${mirrorPrefix}/${url}`;
