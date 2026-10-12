@@ -1,11 +1,11 @@
 // @ts-check
-const { parseXml } = require("@rgrove/parse-xml");
 import * as core from '@actions/core';
 import * as toolCache from "@actions/tool-cache";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import * as child_process from "node:child_process";
+import { parseXml } from "@rgrove/parse-xml";
 
 const ENV_FLEX_HOME = "FLEX_HOME";
 const FLEX_TOOL_CACHE_NAME = "apache-flex";
