@@ -353,7 +353,7 @@ async function setupApacheFlexWithWiproAIR(/** @type string */ airVersion, /** @
   }
   const airSDKMajorMinor = foundMajorMinor[0];
 
-  const antScriptPath = path.resolve(__dirname, "harman-installer.xml");
+  const antScriptPath = path.resolve(import.meta.dirname, "harman-installer.xml");
 
   child_process.execSync(
     `ant -f ${antScriptPath} -Dflexsdk=${flexHome} -Dairsdk.zip=${downloadedPath} -Dair.sdk.version=${airSDKMajorMinor}`,
