@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Installs the the Apache Flex SDK with the Adobe AIR SDK from HARMAN.
+  Installs the the Apache Flex SDK with the Adobe AIR SDK from Wipro (formerly HARMAN).
   
   Note: This script runs with Apache Ant. https://ant.apache.org/
 
@@ -12,7 +12,7 @@
 
   2. Extract (unzip/untar) the Flex SDK Binary Distribution somewhere on your computer.
 
-  3. Download the AIR SDK from HARMAN. Do not extract!
+  3. Download the AIR SDK from Wipro. Do not extract!
      - Windows: AIRSDK_Flex_Windows.zip
      - macOS: AIRSDK_Flex_MacOS.zip
      - Linux: AIRSDK_Flex_Linux.zip

@@ -164,7 +164,7 @@ function getAIRVersionBestMatch(/** @type string */ airVersion, /** @type {any[]
     }
   }
   if (bestMatch == null) {
-    throw new Error(`Adobe AIR SDK (HARMAN) version '${airVersion}' not found`);
+    throw new Error(`Adobe AIR SDK (Wipro) version '${airVersion}' not found`);
   }
   return bestMatch;
 }
@@ -191,7 +191,7 @@ async function setupApacheFlex() {
     const acceptAIRLicense = core.getInput("accept-air-license", { required: true });
     if (!acceptAIRLicense) {
       throw new Error(
-        "Parameter `accept-air-license` must be true to accept the Adobe AIR SDK License Agreement. Find it here: https://airsdk.harman.com/assets/pdfs/HARMAN%20AIR%20SDK%20License%20Agreement.pdf"
+        "Parameter `accept-air-license` must be true to accept the Adobe AIR SDK License Agreement. Find it here: https://airsdk.wxlift.com/assets/pdfs/HARMAN%20AIR%20SDK%20License%20Agreement.pdf"
       );
     }
     const licenseFile = core.getInput("air-license-base64", { required: false });
@@ -216,8 +216,8 @@ async function setupApacheFlex() {
       setupApacheFlexWithAdobeAIR(airVersion, flexHome);
       return;
     }
-    await setupApacheFlexWithHarmanAIR(airVersion, flexHome);
-  } catch (error) {
+    await setupApacheFlexWithWiproAIR(airVersion, flexHome);
+  } catch (/** @type any */ error) {
     core.setFailed(error.message);
   }
 }
@@ -281,14 +281,14 @@ async function downloadFlexSDK(/** @type string */ flexVersion, /** @type string
   return cacheLocation;
 }
 
-async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** @type string */ flexHome) {
+async function setupApacheFlexWithWiproAIR(/** @type string */ airVersion, /** @type string */ flexHome) {
   const releasesResponse = await fetch(
     "https://dcdu3ujoji.execute-api.us-east-1.amazonaws.com/production/releases"
   );
   const releases = await releasesResponse.json();
 
   airVersion = getAIRVersionBestMatch(airVersion, releases.releases);
-  core.info(`Adobe AIR SDK (HARMAN) version: ${airVersion}`);
+  core.info(`Adobe AIR SDK (Wipro) version: ${airVersion}`);
 
   const urlsResponse = await fetch(
     `https://dcdu3ujoji.execute-api.us-east-1.amazonaws.com/production/releases/${airVersion}/urls`
@@ -318,7 +318,7 @@ async function setupApacheFlexWithHarmanAIR(/** @type string */ airVersion, /** 
     );
   }
 
-  const archiveUrl = `https://airsdk.harman.com${urlPath}?license=accepted`;
+  const archiveUrl = `https://airsdk.wxlift.com${urlPath}?license=accepted`;
   const filename = path.basename(new URL(archiveUrl).pathname);
 
   const downloadedPath = path.resolve(process.cwd(), await toolCache.downloadTool(archiveUrl, filename));

@@ -1,6 +1,6 @@
 # Github Action to setup the Apache Flex SDK
 
-This action downloads the [Apache Flex SDK](https://flex.apache.org/), adds the _bin_ folder to the `PATH`, and sets the `FLEX_HOME` environment variable. The setup process also integrates the [Adobe AIR SDK by HARMAN](https://airsdk.harman.com/).
+This action downloads the [Apache Flex SDK](https://flex.apache.org/), adds the _bin_ folder to the `PATH`, and sets the `FLEX_HOME` environment variable. The setup process also integrates the [Adobe AIR SDK by Wipro (formerly HARMAN)](https://airsdk.wxlift.com/).
 
 ## Inputs
 
@@ -14,17 +14,17 @@ _(Required)_ The version of the Adobe AIR SDK to set up. An exact version, such 
 
 ### `accept-air-license`
 
-_(Required)_ Set to `true` if you accept the [Adobe AIR SDK License Agreement](https://airsdk.harman.com/assets/pdfs/HARMAN%20AIR%20SDK%20License%20Agreement.pdf). The action will fail if the agreement is not accepted.
+_(Required)_ Set to `true` if you accept the [Adobe AIR SDK License Agreement](https://airsdk.wxlift.com/assets/pdfs/HARMAN%20AIR%20SDK%20License%20Agreement.pdf). The action will fail if the agreement is not accepted.
 
 ### `air-license-base64`
 
-_(Optional)_ Use with an [encrypted secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to optionally provide a valid _adt.lic_ file, [encoded as a Base64 string](https://docs.github.com/en/actions/security-guides/encrypted-secrets#storing-base64-binary-blobs-as-secrets), to unlock new, restricted features in the Adobe AIR SDK by HARMAN.
+_(Optional)_ Use with an [encrypted secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to optionally provide a valid _adt.lic_ file, [encoded as a Base64 string](https://docs.github.com/en/actions/security-guides/encrypted-secrets#storing-base64-binary-blobs-as-secrets), to unlock new, restricted features in the Adobe AIR SDK by Wipro.
 
 **Warning!** Never include the raw Base64-encoded string value directly in your Github Actions _.yml_ file. You **must** use an [encrypted secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to prevent your license file from being leaked publicly.
 
 ## Example usage
 
-Use the Apache Flex SDK with the AIR SDK by HARMAN for free activities:
+Use the Apache Flex SDK with the AIR SDK by Wipro for free activities:
 
 ```yml
 uses: joshtynjala/setup-apache-flex-action@v2
